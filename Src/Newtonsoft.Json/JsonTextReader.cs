@@ -550,6 +550,23 @@ namespace Newtonsoft.Json
 
                                 charPos = _charPos;
                                 break;
+                           case 'x':
+                                _charPos++;
+ 
+                                char[] hexValues = new char[2];
+                                for (int i = 0; i < hexValues.Length; i++)
+                                {
+                                    if ((currentChar = _chars[_charPos++]) != ' ')
+                                        hexValues[i] = currentChar;
+                                    else
+                                        throw JsonReaderException.Create(this, "Unexpected end while parsing unicode character. Line {0}, position {1}.");
+                                }
+ 
+                                char hexChar = Convert.ToChar(int.Parse(new string(hexValues), NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo));
+                                writeChar = hexChar;
+ 
+                                charPos = _charPos;
+                                break;
                             default:
                                 charPos++;
                                 _charPos = charPos;
